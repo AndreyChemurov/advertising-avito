@@ -1,0 +1,31 @@
+version: '3'
+
+services: 
+  db:
+    restart: unless-stopped
+    image: postgres
+    hostname: postgres
+    container_name: avito_adv_db
+    ports: 
+      - 5432
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: db
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+  web:
+    restart: unless-stopped
+    container_name: avito_adv_web
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/code
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; go run main.go"
+    ports: 
+      - 8000:8000
+    depends_on: 
+      - db
+    links: 
+      - db
