@@ -239,9 +239,9 @@ func GetAllAdv(page int, sort string) (response *types.GetAllResponse, err error
 	SELECT name, link, price FROM (
 		SELECT DISTINCT ON (p.adv_id) name, link, price, created_at 
 		FROM advertisement a INNER JOIN photos p on (a.id=p.adv_id) 
-		WHERE a.id BETWEEN %d AND %d + 9) subquery
+		WHERE a.id >= %d) subquery
 	ORDER BY %s OFFSET %d - 1 LIMIT 10;
-	`, page, page, sort, page)
+	`, page, sort, page)
 
 	stmt, err := tx.Prepare(SQLString)
 
