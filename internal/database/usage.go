@@ -238,8 +238,7 @@ func GetAllAdv(page int, sort string) (response *types.GetAllResponse, err error
 	SQLString := fmt.Sprintf(`
 	SELECT name, link, price FROM (
 		SELECT DISTINCT ON (p.adv_id) name, link, price, created_at 
-		FROM advertisement a INNER JOIN photos p on (a.id=p.adv_id) 
-		WHERE a.id >= %d) subquery
+		FROM advertisement a INNER JOIN photos p on (a.id=p.adv_id)) subquery
 	ORDER BY %s OFFSET %d - 1 LIMIT 10;
 	`, page, sort, page)
 
